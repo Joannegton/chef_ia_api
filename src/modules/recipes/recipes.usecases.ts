@@ -33,7 +33,6 @@ export class RecipesService {
         .filter(ingredient => ingredient.length > 0);
 
       // Gerar receitas com Grok
-      this.logger.log(`Generating new recipes for: ${normalizedIngredients.join(', ')}`);
       const recipes = await this.grokService.generateRecipes(normalizedIngredients);
 
       // Adicionar IDs únicos às receitas
@@ -45,7 +44,6 @@ export class RecipesService {
       // Cachear o resultado por 1 hora
       await this.cacheManager.set(cacheKey, recipesWithIds, 60 * 60 * 1000);
 
-      this.logger.log(`Generated ${recipesWithIds.length} recipes successfully`);
       return recipesWithIds;
 
     } catch (error) {

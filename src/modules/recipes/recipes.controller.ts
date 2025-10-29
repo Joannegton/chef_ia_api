@@ -1,16 +1,21 @@
 import { 
   Controller, 
   Post, 
+  Get,
+  Delete,
   Body, 
   UseGuards, 
   Request,
+  Param,
   HttpException,
   HttpStatus,
   Logger
 } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { RecipesService } from './recipes.service';
+import { RecipesService } from './recipes.usecases';
+import { FavoritesService } from './services/favorites.service';
 import { GenerateRecipesDto } from './dto/generate-recipes.dto';
+import { AddFavoriteDto } from './dto/add-favorite.dto';
 import { AuthGuard } from '../../guards/auth.guard';
 
 @Controller('recipes')
@@ -18,7 +23,10 @@ import { AuthGuard } from '../../guards/auth.guard';
 export class RecipesController {
   private readonly logger = new Logger(RecipesController.name);
 
-  constructor(private readonly recipesService: RecipesService) {}
+  constructor(
+    private readonly recipesService: RecipesService,
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   /**
    * Gera receitas baseadas nos ingredientes fornecidos
@@ -63,7 +71,7 @@ export class RecipesController {
         },
       };
     } catch (error) {
-      this.logger.error('Error generating recipes:', error);
+      this.logger.error(`❌ Erro na geração de receitas:`, error);
       
       if (error instanceof HttpException) {
         throw error;
@@ -98,6 +106,135 @@ export class RecipesController {
       throw new HttpException(
         'Recipe generation service is not available',
         HttpStatus.SERVICE_UNAVAILABLE,
+      );
+    }
+  }
+
+  /**
+   * Adiciona uma receita aos favoritos
+   * POST /api/v1/recipes/favorites
+   * Requer autenticação
+   */
+  @Post('favorites')
+  @UseGuards(AuthGuard)
+  async addToFavorites(
+    @Body() addFavoriteDto: AddFavoriteDto,
+    @Request() req: any,
+  ) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+
+      const result = await this.favoritesService.addToFavorites(
+        userId,
+        addFavoriteDto.recipeId,
+        addFavoriteDto.recipeData,
+      );
+
+      return {
+        success: true,
+        message: 'Recipe added to favorites',
+        data: result.data,
+      };
+    } catch (error) {
+      this.logger.error('Error adding to favorites:', error);
+      throw new HttpException(
+        'Failed to add recipe to favorites',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /**
+   * Remove uma receita dos favoritos
+   * DELETE /api/v1/recipes/favorites/:recipeId
+   * Requer autenticação
+   */
+  @Delete('favorites/:recipeId')
+  @UseGuards(AuthGuard)
+  async removeFromFavorites(
+    @Param('recipeId') recipeId: string,
+    @Request() req: any,
+  ) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+
+      const result = await this.favoritesService.removeFromFavorites(userId, recipeId);
+
+      return {
+        success: true,
+        message: 'Recipe removed from favorites',
+        data: result,
+      };
+    } catch (error) {
+      this.logger.error('Error removing from favorites:', error);
+      throw new HttpException(
+        'Failed to remove recipe from favorites',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /**
+   * Obtém todos os favoritos do usuário
+   * GET /api/v1/recipes/favorites
+   * Requer autenticação
+   */
+  @Get('favorites')
+  @UseGuards(AuthGuard)
+  async getFavorites(@Request() req: any) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+
+      const result = await this.favoritesService.getFavorites(userId);
+
+      return result;
+    } catch (error) {
+      this.logger.error('Error fetching favorites:', error);
+      throw new HttpException(
+        'Failed to fetch favorites',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /**
+   * Verifica se uma receita está nos favoritos
+   * GET /api/v1/recipes/favorites/check/:recipeId
+   * Requer autenticação
+   */
+  @Get('favorites/check/:recipeId')
+  @UseGuards(AuthGuard)
+  async checkFavorite(
+    @Param('recipeId') recipeId: string,
+    @Request() req: any,
+  ) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+
+      const isFavorite = await this.favoritesService.isFavorite(userId, recipeId);
+
+      return {
+        success: true,
+        recipeId,
+        isFavorite,
+      };
+    } catch (error) {
+      this.logger.error('Error checking favorite:', error);
+      throw new HttpException(
+        'Failed to check favorite status',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
