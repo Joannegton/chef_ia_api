@@ -1,0 +1,50 @@
+# Render.com deployment configuration for ChefIA Backend
+services:
+  - type: web
+    name: chefia-api
+    runtime: node
+    runtimeVersion: 18
+    
+    # Build configuration
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    
+    # Environment
+    env: production
+    
+    # Health check
+    healthCheckPath: /health
+    healthCheckTimeout: 10
+    healthCheckInterval: 30
+    
+    # Scaling
+    plan: free # Upgrade to 'starter' or higher for production
+    numInstances: 1
+    
+    # Auto-deploy on push
+    autoDeploy: true
+    
+    # Environment variables (set in Render dashboard)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: GEMINI_API_KEY
+        fromDatabase: false # Set in Render dashboard
+      - key: SUPABASE_URL
+        fromDatabase: false # Set in Render dashboard
+      - key: SUPABASE_ANON_KEY
+        fromDatabase: false # Set in Render dashboard
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        fromDatabase: false # Set in Render dashboard
+      - key: CORS_ORIGINS
+        value: https://seu-frontend.com,https://seu-app-web.vercel.app
+      - key: RATE_LIMIT_TTL
+        value: 60000
+      - key: RATE_LIMIT_MAX
+        value: 100
+      - key: CACHE_TTL
+        value: 3600000
+      - key: CACHE_MAX_ITEMS
+        value: 100
