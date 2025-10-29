@@ -20,10 +20,10 @@ async function bootstrap() {
     }),
   );
   
-  // CORS configuration
+  // CORS configuration - Configuração segura para produção
   const corsOrigin = isDevelopment
     ? [
-        'http://localhost:3000', 
+        'http://localhost:3000',
         'http://localhost:8080',
         'http://localhost:5000',
         'http://localhost:8000',
@@ -31,10 +31,9 @@ async function bootstrap() {
         'http://127.0.0.1:8080',
         'http://127.0.0.1:5000',
         'http://127.0.0.1:8000',
-        'http://10.0.2.2:3000',  // Android emulator
-        '*'  // Allow all origins in development
+        'http://10.0.2.2:3000' 
       ]
-    : (configService.get('CORS_ORIGINS') || 'https://chefia.up.railway.app')
+    : (configService.get('CORS_ORIGINS') || 'https://chefia-api-production.up.railway.app')
         .split(',')
         .map(origin => origin.trim());
 
@@ -42,13 +41,11 @@ async function bootstrap() {
     origin: corsOrigin,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-    credentials: true,
+    credentials: false,
   });
-  
-  // Global prefix
+
   app.setGlobalPrefix('api/v1');
   
-  // Health check endpoint
   app.getHttpAdapter().get('/health', (req, res) => {
     res.json({
       status: 'ok',
@@ -59,14 +56,8 @@ async function bootstrap() {
     });
   });
   
-  // Listen on all interfaces (0.0.0.0) to allow connections from network devices
-  // This enables connection from mobile devices and other machines on the network
   await app.listen(port, '0.0.0.0');
   
-  console.log(`🚀 ChefIA Backend running on port ${port}`);
-  console.log(`📍 Environment: ${configService.get('NODE_ENV')}`);
-  console.log(`🔗 Health check: http://localhost:${port}/health`);
-  console.log(`📚 API docs: http://localhost:${port}/api/v1`);
 }
 
 bootstrap();
