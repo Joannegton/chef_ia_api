@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Exclusão de Conta - ChefIA</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1, h2 { color: #333; }
+        ul { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Solicitação de Exclusão de Conta – ChefIA</h1>
+
+    <p>O ChefIA permite que você solicite a exclusão completa da sua conta e de todos os dados associados a ela. Esta página explica o processo e o que acontece com seus dados.</p>
+
+    <h2>Como Solicitar a Exclusão da Conta</h2>
+    <p>Você pode solicitar a exclusão da sua conta de duas formas: diretamente pelo app (recomendado) ou por e-mail.</p>
+
+    <h3>1) Pelo app (recomendado)</h3>
+    <p>Localização do botão no app:</p>
+    <ul>
+        <li><strong>Botão no Menu da Home Page:</strong> a opção <em>"Excluir Conta"</em> foi adicionada ao <code>PopupMenuButton</code> da AppBar na tela principal (Home Page).</li>
+        <li>A opção aparece <strong>acima</strong> do botão "Sair" no menu.</li>
+    </ul>
+
+    <h4>Fluxo dentro do app</h4>
+    <ol>
+        <li>Usuário toca em <em>Menu</em> na AppBar da Home Page e seleciona <em>Excluir Conta</em>.</li>
+        <li>É exibido um <strong>AlertDialog</strong> de confirmação que explica que a ação é <strong>irrevogável</strong> e que todos os dados associados serão excluídos.</li>
+        <li>O diálogo pede confirmação explícita; o botão <strong>"Excluir"</strong> é exibido em vermelho para indicar perigo. Há também um botão para cancelar.</li>
+        <li>Se o usuário confirmar, o app chama o endpoint seguro do backend (DELETE /api/v1/recipes/user/account) autenticado com o token do usuário.</li>
+        <li>O backend valida o usuário, remove todos os dados relacionados no Supabase (favoritos, perfil, etc.) e retorna confirmação. O app faz logout e redireciona para a tela inicial/login.</li>
+    </ol>
+
+    <p><strong>Observação:</strong> A exclusão realizada pelo app usa um endpoint seguro no backend. Isso garante que a operação seja autenticada e auditável.</p>
+
+    <h3>2) Por e-mail (alternativa)</h3>
+    <p>Se preferir solicitar por e-mail, siga estes passos:</p>
+    <ol>
+        <li>Envie um e-mail para <a href="mailto:suporte.chefia@gmail.com">suporte.chefia@gmail.com</a> com o assunto "Solicitação de Exclusão de Conta".</li>
+        <li>No corpo do e-mail, inclua:
+            <ul>
+                <li>Seu nome completo (opcional).</li>
+                <li>O e-mail associado à sua conta.</li>
+                <li>Uma confirmação de que você deseja excluir permanentemente sua conta e todos os dados.</li>
+            </ul>
+        </li>
+        <li>Aguarde nossa resposta em até 7 dias úteis.</li>
+    </ol>
+
+    <h2>O que Acontece Após a Solicitação</h2>
+    <p>Após recebermos e confirmarmos sua solicitação:</p>
+    <ul>
+        <li><strong>Dados Excluídos:</strong> Todos os dados pessoais, incluindo e-mail, receitas favoritas, histórico de uso e qualquer outra informação associada à sua conta serão permanentemente excluídos de nossos servidores.</li>
+        <li><strong>Dados Mantidos Temporariamente:</strong> Logs anônimos de erro (sem informações pessoais) podem ser retidos por até 30 dias para fins de análise e melhoria do app, conforme nossa política de privacidade.</li>
+        <li><strong>Período de Armazenamento Adicional:</strong> Não há período adicional de armazenamento além dos 30 dias mencionados para backups de segurança.</li>
+    </ul>
+
+    <p>Após a exclusão, você não poderá mais acessar sua conta ou recuperar os dados. Se mudar de ideia, será necessário criar uma nova conta.</p>
+
+    <h2>Contato</h2>
+    <p>Se tiver dúvidas sobre o processo de exclusão, entre em contato conosco:</p>
+    <p>E-mail: <a href="mailto:suporte.chefia@gmail.com">suporte.chefia@gmail.com</a></p>
+
+    <p>Obrigado por usar o ChefIA!</p>
+</body>
+</html>

@@ -2,6 +2,7 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { GeminiService, Recipe } from './services/gemini.service';
+import { SupabaseService } from './services/supabase.service';
 
 @Injectable()
 export class RecipesService {
@@ -10,6 +11,7 @@ export class RecipesService {
   constructor(
     private readonly geminiService: GeminiService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly supabaseService: SupabaseService,
   ) {}
 
   /**
@@ -90,19 +92,19 @@ export class RecipesService {
   }
 
   /**
-   * Obtém estatísticas do cache
+   * Exclui a conta do usuário e todos os dados associados
    */
-  async getCacheStats(): Promise<any> {
+  async deleteUserAccount(userId: string): Promise<void> {
     try {
-      // Nota: cache-manager não fornece estatísticas por padrão
-      // Esta implementação é básica
-      return {
-        status: 'active',
-        timestamp: new Date().toISOString(),
-      };
+      // Excluir favoritos
+      await this.supabaseService.deleteFavoritesByUser(userId);
+
+      await this.supabaseService.deleteUser(userId);
+
+      this.logger.log(`Account deleted for user ${userId}`);
     } catch (error) {
-      this.logger.error('Error getting cache stats:', error);
-      return { status: 'error' };
+      this.logger.error(`Error deleting account for user ${userId}:`, error);
+      throw error;
     }
   }
 }

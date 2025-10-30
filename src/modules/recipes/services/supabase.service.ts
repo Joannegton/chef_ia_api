@@ -57,6 +57,45 @@ export class SupabaseService {
   }
 
   /**
+   * Exclui todos os favoritos de um usuário
+   */
+  async deleteFavoritesByUser(userId: string) {
+    if (!this.supabaseAdmin) {
+      throw new Error('Supabase admin client not initialized');
+    }
+
+    const { error } = await this.supabaseAdmin
+      .from('favorites')
+      .delete()
+      .eq('user_id', userId);
+
+    if (error) {
+      this.logger.error(`Error deleting favorites for user ${userId}:`, error);
+      throw new Error(`Failed to delete favorites: ${error.message}`);
+    }
+
+    this.logger.log(`Favorites deleted for user ${userId}`);
+  }
+
+  /**
+   * Exclui o usuário do Supabase Auth (requer service role key)
+   */
+  async deleteUser(userId: string) {
+    if (!this.supabaseAdmin) {
+      throw new Error('Supabase admin client not initialized');
+    }
+
+    const { error } = await this.supabaseAdmin.auth.admin.deleteUser(userId);
+
+    if (error) {
+      this.logger.error(`Error deleting user ${userId}:`, error);
+      throw new Error(`Failed to delete user: ${error.message}`);
+    }
+
+    this.logger.log(`User ${userId} deleted from Supabase Auth`);
+  }
+
+  /**
    * Verifica se o usuário é válido usando o token JWT do Supabase
    */
   async verifyUser(token: string) {

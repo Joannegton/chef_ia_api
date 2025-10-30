@@ -238,4 +238,33 @@ export class RecipesController {
       );
     }
   }
+
+  /**
+   * Exclui a conta do usuário e todos os dados associados
+   * DELETE /api/v1/recipes/user/account
+   * Requer autenticação
+   */
+  @Delete('user/account')
+  @UseGuards(AuthGuard)
+  async deleteAccount(@Request() req: any) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+
+      await this.recipesService.deleteUserAccount(userId);
+
+      return {
+        success: true,
+        message: 'Conta excluída com sucesso',
+      };
+    } catch (error) {
+      this.logger.error('Error deleting account:', error);
+      throw new HttpException(
+        'Failed to delete account',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }
