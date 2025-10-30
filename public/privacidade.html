@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade - ChefIA</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1, h2 { color: #333; }
+        ul { margin-left: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Política de Privacidade – ChefIA</h1>
+    <p><strong>Última atualização:</strong> 29 de outubro de 2025</p>
+    <p><strong>Versão:</strong> 1.0</p>
+
+    <p>O ChefIA ("nós", "nosso" ou "aplicativo") é um aplicativo gratuito que ajuda você a criar receitas a partir de fotos da sua geladeira usando inteligência artificial. Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos seus dados.</p>
+
+    <p>Ao usar o ChefIA, você concorda com as práticas descritas aqui.</p>
+
+    <h2>1. Dados que Coletamos</h2>
+
+    <h3>a) Dados Fornecidos por Você</h3>
+    <ul>
+        <li>E-mail e nome (opcional): apenas se você fizer login com Google ou e-mail.</li>
+        <li>Foto da geladeira: você tira uma foto para extrair ingredientes.</li>
+        <li>Ingredientes adicionados manualmente.</li>
+        <li>Receitas salvas como favoritas (opcional, no servidor).</li>
+    </ul>
+
+    <h3>b) Dados Coletados Automaticamente</h3>
+    <ul>
+        <li>Texto extraído da foto (ex: "tomate", "arroz") – processado localmente no seu celular com ML Kit (Google).</li>
+        <li>ID do dispositivo (anonimizado) – apenas para sincronizar favoritos entre seus dispositivos.</li>
+        <li>Logs de erro (ex: falha ao gerar receita) – sem informações pessoais.</li>
+    </ul>
+    <blockquote>
+        <p><strong>Importante:</strong> Não coletamos imagens da sua geladeira. A foto é processada no seu celular (offline) e apenas o texto extraído é enviado ao servidor.</p>
+    </blockquote>
+
+    <h2>2. Como Usamos Seus Dados</h2>
+    <table>
+        <tr>
+            <th>Finalidade</th>
+            <th>Dados Usados</th>
+            <th>Base Legal</th>
+        </tr>
+        <tr>
+            <td>Extrair ingredientes da foto</td>
+            <td>Texto da imagem</td>
+            <td>Consentimento</td>
+        </tr>
+        <tr>
+            <td>Gerar receitas com IA (Gemini)</td>
+            <td>Lista de ingredientes</td>
+            <td>Consentimento</td>
+        </tr>
+        <tr>
+            <td>Salvar favoritos (sync entre dispositivos)</td>
+            <td>E-mail, receitas</td>
+            <td>Consentimento</td>
+        </tr>
+        <tr>
+            <td>Melhorar o app (análise de erros)</td>
+            <td>Logs anônimos</td>
+            <td>Interesse legítimo</td>
+        </tr>
+    </table>
+
+    <h2>3. Compartilhamento de Dados</h2>
+    <p>NÃO vendemos, alugamos ou compartilhamos seus dados com terceiros.</p>
+    <p>Seus dados são usados apenas por:</p>
+    <ul>
+        <li>Supabase (EUA): banco de dados e autenticação (com DPA).</li>
+        <li>Gemini (Google): apenas a lista de ingredientes é enviada para gerar receitas.</li>
+        <li>Railway (EUA): hospedagem do backend.</li>
+    </ul>
+    <p>Todos os serviços seguem padrões de segurança (TLS, criptografia em repouso).</p>
+
+    <h2>4. Armazenamento e Segurança</h2>
+    <ul>
+        <li>Fotos: nunca saem do seu celular.</li>
+        <li>Texto extraído: armazenado temporariamente (máximo 24h) para geração de receitas.</li>
+        <li>Favoritos: armazenados com criptografia no Supabase.</li>
+        <li>Backups: retidos por 30 dias.</li>
+    </ul>
+    <p>Você pode excluir todos os seus dados a qualquer momento nas configurações do app.</p>
+
+    <h2>5. Seus Direitos (LGPD)</h2>
+    <p>Você tem direito a:</p>
+    <ul>
+        <li>Acessar seus dados</li>
+        <li>Corrigir dados incorretos</li>
+        <li>Excluir seus dados ("Esquecer-me")</li>
+        <li>Revogar consentimento</li>
+        <li>Exportar seus dados (JSON)</li>
+    </ul>
+    <p>Como exercer? Envie e-mail para: <a href="mailto:suporte.chefia@gmail.com">suporte.chefia@gmail.com</a></p>
+    <p>Respondemos em até 7 dias úteis.</p>
+
+    <h2>6. Menores de Idade</h2>
+    <p>O ChefIA não é destinado a menores de 13 anos. Se você é pai/mãe e acredita que seu filho usou o app, entre em contato.</p>
+
+    <h2>7. Alterações nesta Política</h2>
+    <p>Podemos atualizar esta política. Notificaremos você por:</p>
+    <ul>
+        <li>Tela de atualização no app</li>
+        <li>E-mail (se você estiver logado)</li>
+    </ul>
+    <p>Continuar usando o app = aceitar a nova versão.</p>
+
+    <h2>8. Contato</h2>
+    <p>Desenvolvedor: [Seu Nome ou Empresa]</p>
+    <p>E-mail: <a href="mailto:suporte.chefia@gmail.com">suporte.chefia@gmail.com</a></p>
+    <p>GitHub: <a href="https://github.com/seu-usuario/chefia-online">github.com/seu-usuario/chefia-online</a></p>
+    <p>Obrigado por usar o ChefIA! Seu prato perfeito começa com uma foto.</p>
+    <p>Esta política foi criada com base na LGPD (Lei nº 13.709/2018), Google Play e App Store.</p>
+</body>
+</html>

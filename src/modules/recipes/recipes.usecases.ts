@@ -8,7 +8,7 @@ export class RecipesService {
   private readonly logger = new Logger(RecipesService.name);
 
   constructor(
-    private readonly grokService: GeminiService,
+    private readonly geminiService: GeminiService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -32,8 +32,7 @@ export class RecipesService {
         .map(ingredient => ingredient.toLowerCase().trim())
         .filter(ingredient => ingredient.length > 0);
 
-      // Gerar receitas com Grok
-      const recipes = await this.grokService.generateRecipes(normalizedIngredients);
+      const recipes = await this.geminiService.generateRecipes(normalizedIngredients);
 
       // Adicionar IDs únicos às receitas
       const recipesWithIds = recipes.map((recipe, index) => ({
@@ -83,7 +82,7 @@ export class RecipesService {
    */
   async clearCache(): Promise<void> {
     try {
-      await this.cacheManager.reset();
+      await (this.cacheManager as any).reset();
       this.logger.log('Recipe cache cleared successfully');
     } catch (error) {
       this.logger.error('Error clearing cache:', error);

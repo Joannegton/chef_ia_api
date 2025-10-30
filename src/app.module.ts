@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import { RecipesModule } from './modules/recipes/recipes.module';
 
@@ -24,6 +26,11 @@ import { RecipesModule } from './modules/recipes/recipes.module';
       isGlobal: true,
       ttl: 60 * 60 * 1000, // 1 hour
       max: 100, // max items in cache
+    }),
+
+    // Serve static files
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
     }),
     
     RecipesModule,
