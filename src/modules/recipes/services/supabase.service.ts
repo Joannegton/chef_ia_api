@@ -96,6 +96,30 @@ export class SupabaseService {
   }
 
   /**
+   * Salva feedback na tabela 'feedback'
+   */
+  async saveFeedback(payload: { message: string; email?: string | null }) {
+    if (!this.supabaseAdmin) {
+      throw new Error('Supabase admin client not initialized');
+    }
+
+    const record = {
+      message: payload.message,
+      email: payload.email,
+      created_at: new Date().toISOString(),
+    };
+
+    const { error } = await this.supabaseAdmin.from('feedback').insert(record);
+
+    if (error) {
+      this.logger.error('Error inserting feedback:', error);
+      throw new Error(`Failed to save feedback: ${error.message}`);
+    }
+
+    this.logger.log('Feedback inserted');
+  }
+
+  /**
    * Verifica se o usuário é válido usando o token JWT do Supabase
    */
   async verifyUser(token: string) {

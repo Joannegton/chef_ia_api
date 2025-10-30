@@ -107,4 +107,18 @@ export class RecipesService {
       throw error;
     }
   }
+
+  /**
+   * Salva feedback enviado pelos usuários (anônimo ou com e-mail opcional)
+   */
+  async saveFeedback(payload: { message: string; email?: string | null }): Promise<void> {
+    try {
+      await this.supabaseService.saveFeedback(payload);
+
+      this.logger.log('Feedback saved');
+    } catch (error) {
+      this.logger.error('Error saving feedback:', error);
+      throw error;
+    }
+  }
 }

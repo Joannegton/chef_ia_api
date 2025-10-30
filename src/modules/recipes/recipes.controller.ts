@@ -16,6 +16,7 @@ import { RecipesService } from './recipes.usecases';
 import { FavoritesService } from './services/favorites.service';
 import { GenerateRecipesDto } from './dto/generate-recipes.dto';
 import { AddFavoriteDto } from './dto/add-favorite.dto';
+import { SubmitFeedbackDto } from './dto/submit-feedback.dto';
 import { AuthGuard } from '../../guards/auth.guard';
 
 @Controller('recipes')
@@ -263,6 +264,32 @@ export class RecipesController {
       this.logger.error('Error deleting account:', error);
       throw new HttpException(
         'Failed to delete account',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /**
+   * Recebe feedback dos usuários (anônimo ou com e-mail opcional)
+   * POST /api/v1/recipes/feedback
+   * Não requer autenticação
+   */
+  @Post('feedback')
+  async submitFeedback(@Body() submitFeedbackDto: SubmitFeedbackDto) {
+    try {
+      await this.recipesService.saveFeedback({
+        message: submitFeedbackDto.message,
+        email: submitFeedbackDto.email,
+      });
+
+      return {
+        success: true,
+        message: 'Feedback enviado com sucesso. Obrigado!',
+      };
+    } catch (error) {
+      this.logger.error('Error submitting feedback:', error);
+      throw new HttpException(
+        'Failed to submit feedback',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

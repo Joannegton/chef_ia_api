@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Enviar Feedback - ChefIA</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 20px; }
+    label { display:block; margin-top:10px; }
+    textarea { width:100%; height:120px; }
+    input[type="text"] { width:100%; }
+    button { margin-top:10px; padding:10px 16px; }
+    .danger { background:#c62828; color:white; border:none; }
+    .success { background:#2e7d32; color:white; border:none; }
+    .note { color:#555; font-size:0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Enviar Feedback — ChefIA</h1>
+
+  <p class="note"> Obrigado por testar o ChefIA! Seu feedback é anônimo por padrão. Se quiser receber resposta, adicione um e-mail opcionalmente.</p>
+
+  <form id="feedbackForm">
+    <label for="message">Mensagem (obrigatório)</label>
+    <textarea id="message" name="message" required></textarea>
+
+    <label for="email">E-mail (opcional)</label>
+    <input id="email" name="email" type="text" placeholder="seu@email.com (opcional)" />
+
+    <div>
+      <button type="submit" class="danger">Enviar Feedback</button>
+      <button type="button" id="clearBtn">Limpar</button>
+    </div>
+  </form>
+
+  <div id="status" aria-live="polite" style="margin-top:12px"></div>
+
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const status = document.getElementById('status');
+    const clearBtn = document.getElementById('clearBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+      const message = document.getElementById('message').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!message) {
+        status.textContent = 'Por favor, escreva uma mensagem antes de enviar.';
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/v1/recipes/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, email: email || null }),
+        });
+
+        if (!resp.ok) {
+          const body = await resp.json().catch(()=>({}));
+          status.textContent = 'Erro ao enviar feedback: ' + (body?.message || resp.statusText);
+          return;
+        }
+
+        status.textContent = 'Obrigado! Seu feedback foi enviado com sucesso.';
+        status.className = 'success';
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Erro ao enviar feedback. Tente novamente mais tarde.';
+      }
+    });
+
+    clearBtn.addEventListener('click', () => form.reset());
+  </script>
+</body>
+</html>
